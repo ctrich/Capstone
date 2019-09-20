@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="633.0" prefWidth="876.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.ReportsController">
+   <children>
+      <Label layoutX="353.0" layoutY="27.0" text="Reports" textFill="#2250a1">
+         <font>
+            <Font name="System Bold Italic" size="22.0" />
+         </font>
+      </Label>
+      <TabPane layoutY="109.0" prefHeight="525.0" prefWidth="877.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Appointment Type">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="43.0" layoutY="43.0" text="Appointment Types by Month">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="appTypeTv" layoutX="133.0" layoutY="97.0" prefHeight="317.0" prefWidth="590.0">
+                          <columns>
+                              <TableColumn fx:id="monthCol" prefWidth="200.0" text="Month" />
+                            <TableColumn fx:id="typeCol" prefWidth="218.0" text="Type" />
+                            <TableColumn fx:id="numberCol" minWidth="1.0" prefWidth="213.0" text="Number" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Consultant Schedule">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="52.0" layoutY="14.0" text="Consultants Schedule">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="scheduleTv" layoutX="52.0" layoutY="125.0" prefHeight="339.0" prefWidth="718.0">
+                          <columns>
+                            <TableColumn fx:id="customerNameCol" prefWidth="154.0" text="Customer Name" />
+                            <TableColumn fx:id="sTypeCol" minWidth="3.0" prefWidth="148.0" text="Type" />
+                              <TableColumn fx:id="startCol" prefWidth="189.0" text="Start" />
+                              <TableColumn fx:id="endCol" prefWidth="226.0" text="End" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="52.0" layoutY="67.0" text="Consultant">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="consultCB" layoutX="172.0" layoutY="62.0" onAction="#getSchedule" prefHeight="32.0" prefWidth="239.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Countries">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="72.0" layoutY="61.0" text="Countries we do business in">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="countryTv" layoutX="68.0" layoutY="114.0" prefHeight="292.0" prefWidth="143.0">
+                          <columns>
+                            <TableColumn fx:id="countryCol" prefWidth="142.0" text="Country" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button layoutX="734.0" layoutY="47.0" mnemonicParsing="false" onAction="#cancelHandler" prefHeight="32.0" prefWidth="78.0" text="Back" />
+   </children>
+</AnchorPane>
