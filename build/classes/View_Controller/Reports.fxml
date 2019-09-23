@@ -39,24 +39,24 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Consultant Schedule">
+          <Tab text="Dentist Schedules">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="52.0" layoutY="14.0" text="Consultants Schedule">
+                        <Label layoutX="52.0" layoutY="14.0" text="Dentist's Schedule">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
                         <TableView fx:id="scheduleTv" layoutX="52.0" layoutY="125.0" prefHeight="339.0" prefWidth="718.0">
                           <columns>
-                            <TableColumn fx:id="customerNameCol" prefWidth="154.0" text="Customer Name" />
+                            <TableColumn fx:id="customerNameCol" prefWidth="154.0" text="Patient Name" />
                             <TableColumn fx:id="sTypeCol" minWidth="3.0" prefWidth="148.0" text="Type" />
                               <TableColumn fx:id="startCol" prefWidth="189.0" text="Start" />
                               <TableColumn fx:id="endCol" prefWidth="226.0" text="End" />
                           </columns>
                         </TableView>
-                        <Label layoutX="52.0" layoutY="67.0" text="Consultant">
+                        <Label layoutX="52.0" layoutY="67.0" text="Dentist">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -66,20 +66,30 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Countries">
+            <Tab text="Appointments By Month">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="72.0" layoutY="61.0" text="Countries we do business in">
+                        <TableView fx:id="appTV" layoutX="139.0" layoutY="88.0" prefHeight="340.0" prefWidth="635.0">
+                           <columns>
+                              <TableColumn fx:id="patientCol" prefWidth="108.5" text="Patient" />
+                              <TableColumn fx:id="consultantCol" prefWidth="102.0" text="Dentist" />
+                              <TableColumn fx:id="typeCol1" prefWidth="113.0" text="Type" />
+                              <TableColumn fx:id="startCol1" prefWidth="162.0" text="Start" />
+                              <TableColumn fx:id="endCol1" prefWidth="150.5" text="End" />
+                           </columns>
+                        </TableView>
+                        <Label layoutX="150.0" layoutY="54.0" text="Month">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="appMonthCB" layoutX="207.0" layoutY="52.0" onAction="#selectMonthHandler" prefWidth="150.0" />
+                        <Label layoutX="150.0" layoutY="14.0" text="Appointments By Month">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <TableView fx:id="countryTv" layoutX="68.0" layoutY="114.0" prefHeight="292.0" prefWidth="143.0">
-                          <columns>
-                            <TableColumn fx:id="countryCol" prefWidth="142.0" text="Country" />
-                          </columns>
-                        </TableView>
                      </children>
                   </AnchorPane>
               </content>

@@ -38,8 +38,10 @@ public class AppointmentDAO {
         Timestamp start = changeTimetoUTC(app.getStart());
         Timestamp end = changeTimetoUTC(app.getEnd());
         
-        String sqlInsert = "INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdateBy)"
-                         + "VALUES(?,?,'','', '', '', ?,'', ?, ?, now(), ?, ?)";
+        int dentistId = DentistDAO.getDentistIdByName(app.getDentistName());
+        
+        String sqlInsert = "INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdateBy, dentistId)"
+                         + "VALUES(?,?,'','', '', '', ?,'', ?, ?, now(), ?, ?, ?)";
         
         try {
             PreparedStatement stmt = conn.prepareStatement(sqlInsert);
@@ -50,6 +52,7 @@ public class AppointmentDAO {
             stmt.setTimestamp(5, end);
             stmt.setString(6, UserDAO.currentUser.getUserName());
             stmt.setString(7, UserDAO.currentUser.getUserName());
+            stmt.setInt(8, dentistId);
    
             
             stmt.executeUpdate();
@@ -84,7 +87,7 @@ public class AppointmentDAO {
     public static void updateAppointment(Appointment app) {
         Timestamp start = changeTimetoUTC(app.getStart());
         Timestamp end = changeTimetoUTC(app.getEnd());
-        String sqlUpdate = "UPDATE appointment SET userId = ?, type = ?, start = ?, end = ?, lastUpdateBy = ?"
+        String sqlUpdate = "UPDATE appointment SET userId = ?, type = ?, start = ?, end = ?, lastUpdateBy = ?, dentistId = ? "
                          + "WHERE appointmentId = ?";
         
         try {
@@ -94,7 +97,8 @@ public class AppointmentDAO {
             stmt.setTimestamp(3, start);
             stmt.setTimestamp(4, end);
             stmt.setString(5, UserDAO.currentUser.getUserName());
-            stmt.setInt(6, app.getAppointmentId());
+            stmt.setInt(6, app.getDentistId());
+            stmt.setInt(7, app.getAppointmentId());
             
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -122,6 +126,8 @@ public class AppointmentDAO {
                 app.setUserId(rs.getInt("userId"));
                 app.setUserName(rs.getString("userName"));
                 app.setType(rs.getString("type"));
+                app.setDentistId(rs.getInt("dentistId"));
+                app.setDentistName(rs.getString("lastName"));
                 
                 
                 
@@ -167,9 +173,10 @@ public class AppointmentDAO {
      * @throws SQLException 
      */
     public static ObservableList<Appointment> getAppointments() throws SQLException{
-       String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+       String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                         + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
-                        + "INNER JOIN user ON appointment.userId = user.userId";
+                        + "INNER JOIN user ON appointment.userId = user.userId "
+                        + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId";
             PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
             ResultSet rs = pStmt.executeQuery();
             
@@ -182,13 +189,14 @@ public class AppointmentDAO {
      * @return a list of all appointments for the entered user
      * @throws SQLException 
      */
-    public static ObservableList<Appointment> getAppointments(String user) throws SQLException{
-         String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+    public static ObservableList<Appointment> getAppointments(String dentist) throws SQLException{
+         String sqlQuery = "SELECT customer.customerName, customer.customerId,user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                         + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                         + "INNER JOIN user ON appointment.userId = user.userId "
-                        + "WHERE userName = ?";
+                        + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "
+                        + "WHERE dentist.lastName = ?";
             PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
-            pStmt.setString(1, user);
+            pStmt.setString(1, dentist);
             ResultSet rs = pStmt.executeQuery();
             
             return getAppointments(sqlQuery, pStmt, rs);
@@ -202,9 +210,10 @@ public class AppointmentDAO {
      * @throws SQLException 
      */
     public static ObservableList<Appointment> getAppointments(int month) throws SQLException{
-                    String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+                    String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                                     + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                                     + "INNER JOIN user ON appointment.userId = user.userId "
+                                    + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "
                                     + "WHERE DATE_FORMAT(appointment.start, '%c') = ?";
         
             PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
@@ -244,9 +253,10 @@ public class AppointmentDAO {
      * @throws SQLException 
      */
     public static ObservableList<Appointment> getAppointments(Customer customer) throws SQLException{
-        String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+        String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                                     + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                                     + "INNER JOIN user ON appointment.userId = user.userId "
+                                    + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "
                                     + "WHERE appointment.customerId = ?";
         
         PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
@@ -262,18 +272,21 @@ public class AppointmentDAO {
      * @return a list of appointments that overlap with the entered times
      * @throws SQLException 
      */
-    public static ObservableList<Appointment> getAppointments(LocalDateTime start, LocalDateTime end) throws SQLException {
+    public static ObservableList<Appointment> getAppointments(LocalDateTime start, LocalDateTime end, String dentistName) throws SQLException {
         
         //change time to UTC
         Timestamp sTime = changeTimetoUTC(start);
         Timestamp eTime = changeTimetoUTC(end);
+        System.out.println(dentistName);
         
-        String sqlQuery =   "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+        String sqlQuery =   "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                           + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                           + "INNER JOIN user ON appointment.userId = user.userId "
-                          + "WHERE (appointment.start >= ? AND appointment.end <= ?) "
+                          + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "
+                          + "WHERE ((appointment.start >= ? AND appointment.end <= ?) "
                           + "OR (appointment.start <= ? AND appointment.end >= ?) "
-                          + "OR (appointment.start BETWEEN ? AND ? OR appointment.end BETWEEN ? AND ?)";
+                          + "OR (appointment.start BETWEEN ? AND ? OR appointment.end BETWEEN ? AND ?)) "
+                          + "AND dentist.lastName = ?";
       
           PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
           pStmt.setTimestamp(1, sTime);
@@ -284,6 +297,7 @@ public class AppointmentDAO {
           pStmt.setTimestamp(6, eTime);
           pStmt.setTimestamp(7, sTime);
           pStmt.setTimestamp(8, eTime);
+          pStmt.setString(9, dentistName);
           ResultSet rs = pStmt.executeQuery(); 
             
           return getAppointments(sqlQuery, pStmt, rs);

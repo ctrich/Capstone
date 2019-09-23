@@ -24,8 +24,10 @@ public class Appointment {
     private String type;
     private LocalDateTime start;
     private LocalDateTime end;
+    private int dentistId;
+    private String dentistName;
 
-    public Appointment(int appointmentId, int customerId,String customerName, String userName, int userId, String type, LocalDateTime start, LocalDateTime end) {
+    public Appointment(int appointmentId, int customerId,String customerName, String userName, int userId, String type, LocalDateTime start, LocalDateTime end,int dentistId, String dentistName) {
         this.appointmentId = appointmentId;
         this.customerId = customerId;
         this.customerName = customerName;
@@ -34,6 +36,8 @@ public class Appointment {
         this.type = type;
         this.start = start;
         this.end = end;
+        this.dentistId = dentistId;
+        this.dentistName = dentistName;
     }
 
     public Appointment() {
@@ -102,7 +106,23 @@ public class Appointment {
     public void setEnd(LocalDateTime end) {
         this.end = end;
     }
+
+    public int getDentistId() {
+        return dentistId;
+    }
+
+    public void setDentistId(int dentistId) {
+        this.dentistId = dentistId;
+    }
     
+    public String getDentistName() {
+        return dentistName;
+    }
+
+    public void setDentistName(String dentistName) {
+        this.dentistName = dentistName;
+    }
+
     
     
 }

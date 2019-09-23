@@ -14,6 +14,7 @@ import Model.Address;
 import Model.City;
 import Model.Country;
 import Model.Customer;
+import Model.Validation;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -69,7 +70,6 @@ public class UpdateCustomerController implements Initializable {
     private TextField postalTxt;
 
    private Customer selectedCustomer = new Customer(); 
-   private ObservableList<String> error = FXCollections.observableArrayList();
     
    
 /**
@@ -91,10 +91,11 @@ public class UpdateCustomerController implements Initializable {
        
         //Show an error to the user if they left any of the customer fields blank
         try {
-            checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, selectedCountry, selectedCity, enteredPostal, enteredPhone);
+            Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, selectedCountry, selectedCity, enteredPostal, enteredPhone);
+            Validation.validateName(enteredName);
         } catch (InputException ex) {
             System.out.println(ex);
-            String errors = error.stream().collect(Collectors.joining(" \n "));
+            String errors = Validation.error.stream().collect(Collectors.joining(" \n "));
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(errors);
@@ -103,12 +104,12 @@ public class UpdateCustomerController implements Initializable {
         }
         //Show a message if the phone field isn't only numbers
         try {
-            phoneTxtIsNumbers(enteredPhone);
+            Validation.phoneTxtIsNumbers(enteredPhone);
         } catch (InputException ex) {
             System.out.println(ex);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setContentText(error.get(0));
+            alert.setContentText(Validation.error.get(0));
             alert.showAndWait();
             return;
         }
@@ -122,69 +123,7 @@ public class UpdateCustomerController implements Initializable {
         
         changeScene(event, "MainScreen.fxml");
     }
-       /**
-     * 
-     * @param phone
-     * @throws InputException if the phone field is not numbers only
-     */
-    public void phoneTxtIsNumbers(String phone) throws InputException{
-        error.clear();
-         if (phone.matches("[0-9]+") && phone.length() > 2){
-             return;
-         }
-         error.add("The phone field should only contain numbers.");
-         throw new InputException("Phone field should only contain numbers");
-    }
-    
-    /**
-     * 
-     * @param name
-     * @param address
-     * @param address2
-     * @param country
-     * @param city
-     * @param postal
-     * @param phone
-     * @throws InputException if any fields are blank
-     * 
-     */
-    public void checkForEmptyFields(String name, String address, String address2, String country, String city, String postal, String phone) throws InputException{
-        
-        error.clear();
-        
-        if(name.isEmpty()){
-            error.add("Please enter your name");
-        }
-      
-        if(address.isEmpty()){
-            error.add("Please enter an address");
-        }
-        
-        if(address2.isEmpty()){
-            error.add("If you do not have an address line 2 enter N/A");
-        }
-        
-        if(country == null){
-            error.add("Please select a country");
-        }
-        
-        if(city == null){
-            error.add("Please select a city");
-        }
-        
-        if(postal.isEmpty()){
-            error.add("Please enter a Postal code");
-        }
-        
-        if(phone.isEmpty()){
-            error.add("Please enter a Phone number");
-        }
-        if(!error.isEmpty()){
-            throw new InputException("All fields must be filled in.");  
-        }
-            
-    }
-    
+
     /**
      * 
      * @param event 
@@ -216,7 +155,6 @@ public class UpdateCustomerController implements Initializable {
         phoneTxt.setText(customer.getAddress().getPhone());
         selectedCustomer = customer;
     }
-    
     
     
     /**

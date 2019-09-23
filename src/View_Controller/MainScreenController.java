@@ -30,8 +30,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
@@ -51,8 +54,18 @@ public class MainScreenController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
     @FXML
-    private Button viewByMonthBtn;
+    private ScrollPane scrollPane;
+    
+    @FXML
+    private Button viewAllBtn;
+    
+    @FXML
+    private Button patientSearchBtn;
+    
+    @FXML
+    private TextField patientSearchTxt;
     
     @FXML
     private Button viewByWeekBtn;
@@ -129,16 +142,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<Appointment, LocalDateTime> appEndCol;
     
-    /**
-     * 
-     * @param event
-     * @throws IOException 
-     * Takes the user to the view by month scene
-     */
-    @FXML
-    public void viewByMonthHandler(ActionEvent event) throws IOException{
-        changeScene(event, "AppointmentMonth.fxml");
-    }
+
     /**
      * 
      * @param event
@@ -230,6 +234,31 @@ public class MainScreenController implements Initializable {
     public void addCustomerHandler(ActionEvent event) throws IOException {
         
        changeScene(event, "AddCustomer.fxml");
+    }
+    
+    @FXML
+    public void searchPatientHandler(ActionEvent event) {
+        if (patientSearchTxt.getText() == null) {
+            return;
+        } else {
+            String name = patientSearchTxt.getText();
+            customerTv.setItems(CustomerDAO.getCustomerByName(name));
+            
+            customerIdTvCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            customerNameTvCol.setCellValueFactory(new PropertyValueFactory<>("customerName")); 
+            customerActiveTvCol.setCellValueFactory(new PropertyValueFactory<>("active"));
+            customerPhoneTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getPhone()));
+            customerAddTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getAddress()));
+            customerAdd2TvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getAddressTwo()));
+            customerPostalTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getPostalCode()));
+            customerCityTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCity()));
+            customerCountryTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCountry().getCountry()));
+        }
+    }
+    
+    @FXML
+    public void viewAllHandler(ActionEvent event) {
+        populateCustomerTable();
     }
     
     
@@ -334,7 +363,7 @@ public class MainScreenController implements Initializable {
         }
         
         appCustomerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        appConsultCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        appConsultCol.setCellValueFactory(new PropertyValueFactory<>("dentistName"));
         appTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         appStartCol.setCellValueFactory(new PropertyValueFactory<>("start"));
         appEndCol.setCellValueFactory(new PropertyValueFactory<>( "end"));
@@ -372,5 +401,6 @@ public class MainScreenController implements Initializable {
 
         populateCustomerTable();
         populateAppointmentTable();
+        scrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
     }
 }

@@ -8,13 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="576.0" prefWidth="788.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="View_Controller.AppointmentMonthController">
+<AnchorPane id="AnchorPane" prefHeight="576.0" prefWidth="788.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentMonthController">
    <children>
       <TableView fx:id="appTV" layoutX="123.0" layoutY="175.0" prefHeight="303.0" prefWidth="497.0">
         <columns>
-          <TableColumn fx:id="customerCol" prefWidth="95.0" text="Customer" />
-          <TableColumn fx:id="consultantCol" prefWidth="86.0" text="Consultant" />
+          <TableColumn fx:id="customerCol" prefWidth="95.0" text="Patient" />
+          <TableColumn fx:id="consultantCol" prefWidth="86.0" text="Dentist" />
             <TableColumn fx:id="typeCol" prefWidth="100.0" text="Type" />
             <TableColumn fx:id="startCol" prefWidth="93.0" text="Start" />
             <TableColumn fx:id="endCol" prefWidth="122.0" text="End" />

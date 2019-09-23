@@ -6,6 +6,7 @@
 package View_Controller;
 
 import DAO.AppointmentDAO;
+import DAO.DentistDAO;
 import Exception.InputException;
 import Exception.OverlapAppException;
 import Model.Appointment;
@@ -53,6 +54,9 @@ public class UpdateAppointmentController implements Initializable {
     
     @FXML
     private TextField customerTxt;
+    
+    @FXML
+    private ComboBox<String> dentistCB;
 
     @FXML
     private DatePicker dateDP;
@@ -86,6 +90,7 @@ public class UpdateAppointmentController implements Initializable {
         String sMinute = startTimeCB.getValue();
         String eHour = endTimeCB.getValue();
         String eMinute = endTimeCB.getValue();
+        String dentistName = dentistCB.getValue();
         
         //show an error message to the user if any fields are left blank
         try {
@@ -138,7 +143,9 @@ public class UpdateAppointmentController implements Initializable {
             selectedApp.setType(typeCB.getValue());
             selectedApp.setStart(sLDateTime);
             selectedApp.setEnd(eLDateTime);
-
+            selectedApp.setDentistName(dentistName);
+            selectedApp.setDentistId(DentistDAO.getDentistIdByName(dentistName));
+            
             AppointmentDAO.updateAppointment(selectedApp);
             changeScene(event);
         
@@ -178,6 +185,7 @@ public class UpdateAppointmentController implements Initializable {
     public void setAppointment(Appointment app) {
         customerTxt.setText(app.getCustomerName());
         typeCB.setValue(app.getType());
+        dentistCB.setValue(app.getDentistName());
         startTimeCB.setValue(app.getStart().toString().substring(11));
         endTimeCB.setValue(app.getEnd().toString().substring(11));
         dateDP.setValue(app.getStart().toLocalDate());
@@ -249,7 +257,8 @@ public class UpdateAppointmentController implements Initializable {
         
         
         
-        ObservableList<String> types = FXCollections.observableArrayList("First Meeting", "First Consult", "Update", "Consult");
+        ObservableList<String> types = FXCollections.observableArrayList("Check-up", "Cleaning", "Tooth Extraction", "Root Canal", "Gum Care", "Counseling", "Dentures", "Tooth Pain");
+        ObservableList<String> dentists = FXCollections.observableArrayList(DentistDAO.getAllDentists());
         ObservableList<String> startTimes = FXCollections.observableArrayList();
         ObservableList<String> endTimes = FXCollections.observableArrayList();
 
@@ -289,6 +298,7 @@ public class UpdateAppointmentController implements Initializable {
         typeCB.setItems(types);
         startTimeCB.setItems(startTimes);
         endTimeCB.setItems(endTimes);
+        dentistCB.setItems(dentists);
     }    
     
 }

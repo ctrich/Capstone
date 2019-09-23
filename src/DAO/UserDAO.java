@@ -84,4 +84,21 @@ public static User currentUser = new User();
         return users;
         
     }
+    
+    public static void addUser(String username, String password) {
+        String insert = "INSERT INTO user(userName, password, active, createDate, createdBy, lastUpdate, lastUpdatedBy) "
+                      + "VALUES(?, ?, 1, now(), 'admin', now(), admin)";
+        
+        PreparedStatement stmt;
+    try {
+        stmt = conn.prepareStatement(insert);
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        
+        stmt.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
+    }
 }

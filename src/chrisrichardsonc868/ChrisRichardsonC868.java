@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chrisrichardsonc195;
+package chrisrichardsonc868;
 
 import DAO.DBConnection;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  * email: cric215@wgu.edu
  * Class: C195
  */
-public class ChrisRichardsonC195 extends Application {
+public class ChrisRichardsonC868 extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="439.0" prefWidth="423.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="View_Controller.AdminScreenController">
+   <children>
+      <TextField fx:id="addUserTxt" layoutX="86.0" layoutY="59.0" />
+      <TextField fx:id="userPasswordTxt" layoutX="86.0" layoutY="104.0" />
+      <TextField fx:id="dentistNameTxt" layoutX="110.0" layoutY="312.0" />
+      <Button fx:id="saveUserbtn" layoutX="287.0" layoutY="104.0" mnemonicParsing="false" onAction="#saveUserHandler" text="Save User" />
+      <Button fx:id="saveDentistBtn" layoutX="280.0" layoutY="312.0" mnemonicParsing="false" onAction="#saveDentistHandler" text="Save Dentist" />
+      <Label layoutX="25.0" layoutY="63.0" text="Username" />
+      <Label layoutX="25.0" layoutY="108.0" text="Password" />
+      <Label layoutX="25.0" layoutY="316.0" text="Dentist Name" />
+      <Label layoutX="18.0" layoutY="28.0" text=" Add user">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="25.0" layoutY="269.0" text="Add Dentist">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="signOutBtn" layoutX="301.0" layoutY="383.0" mnemonicParsing="false" onAction="#signOutHandler" text="Sign out" />
+   </children>
+</AnchorPane>

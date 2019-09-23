@@ -7,6 +7,7 @@ package View_Controller;
 
 import DAO.AppointmentDAO;
 import DAO.CountryDAO;
+import DAO.DentistDAO;
 import DAO.ReportsDAO;
 import DAO.UserDAO;
 import Model.Appointment;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,10 +49,25 @@ public class ReportsController implements Initializable  {
      * Initializes the controller class.
      */
     @FXML
-    private TableView<Country> countryTv;
+    private TableView<Appointment> appTV;
     
-    @FXML 
-    private TableColumn<Country, String> countryCol;
+    @FXML
+    private TableColumn<Appointment, String> patientCol;
+    
+    @FXML
+    private TableColumn<Appointment, String> consultantCol;
+    
+    @FXML
+    private TableColumn<Appointment, String> typeCol1;
+    
+    @FXML
+    private TableColumn<Appointment, LocalDateTime> startCol1;
+    
+    @FXML
+    private TableColumn<Appointment, LocalDateTime> endCol1;
+    
+    @FXML
+    private ComboBox<String> appMonthCB;
     
     @FXML
     private TableView<ReportAppByType> appTypeTv;
@@ -105,6 +123,57 @@ public class ReportsController implements Initializable  {
     
     /**
      * 
+     * @param event 
+     * Populate the Appointments table with the appointments for the selected month
+     */
+    @FXML
+    void selectMonthHandler(ActionEvent event) {
+        if(appMonthCB.getValue() != null){
+            int month = 0;
+               //assign a value to each month that can be used in the sql query to find the appointments for that month 
+            switch(appMonthCB.getValue()) {
+                case "January": month = 1;
+                break;
+                case "February": month = 2;
+                break;
+                case "March": month = 3;
+                break;
+                case "April": month = 4;
+                break;
+                case "May": month = 5;
+                break;
+                case "June": month = 6;
+                break;
+                case "July": month = 7;
+                break;
+                case "August": month = 8;
+                break;
+                case "September": month = 9;
+                break;
+                case "October": month = 10;
+                break;
+                case "November": month = 11;
+                break;
+                case "December": month = 12;
+                break;
+                default: break;
+        }
+            try {
+                appTV.setItems(AppointmentDAO.getAppointments(month));
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+
+            patientCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            consultantCol.setCellValueFactory(new PropertyValueFactory<>("dentistName"));
+            typeCol1.setCellValueFactory(new PropertyValueFactory<>("type"));
+            startCol1.setCellValueFactory(new PropertyValueFactory<>("start"));
+            endCol1.setCellValueFactory(new PropertyValueFactory<>("end"));
+        }
+    }
+    
+    /**
+     * 
      * @param event
      * @throws IOException 
      * Returns to the main screen 
@@ -135,15 +204,10 @@ public class ReportsController implements Initializable  {
         monthCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         
-        consultCB.setItems(UserDAO.getAllUsersNames());
+        consultCB.setItems(DentistDAO.getAllDentists());
         
-        countryTv.setItems(CountryDAO.getCountries());
-        
-        countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
-        
-        
-
-                
+        ObservableList<String> months = FXCollections.observableArrayList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+        appMonthCB.setItems(months);       
     }    
     
 }

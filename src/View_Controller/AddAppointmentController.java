@@ -7,6 +7,7 @@ package View_Controller;
 
 import DAO.AppointmentDAO;
 import DAO.CustomerDAO;
+import DAO.DentistDAO;
 import DAO.UserDAO;
 import Exception.InputException;
 import Exception.OverlapAppException;
@@ -19,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -39,6 +42,7 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -58,6 +62,15 @@ public class AddAppointmentController implements Initializable {
     
     @FXML
     private TableView<Customer> customerTv;
+    
+    @FXML
+    private TextField patientSearchTxt;
+    
+    @FXML
+    private Button patientSearchBtn;
+    
+    @FXML
+    private ComboBox<String> dentistCB;
     
     @FXML
     private TableColumn<Customer, String> customerCol;
@@ -104,7 +117,7 @@ public class AddAppointmentController implements Initializable {
             alert.setContentText("Please select a customer");
             alert.showAndWait();
             return;
-        }
+        } 
         
         String customerName = customerTv.getSelectionModel().getSelectedItem().getCustomerName();
         int customerId = customerTv.getSelectionModel().getSelectedItem().getCustomerId();
@@ -117,10 +130,11 @@ public class AddAppointmentController implements Initializable {
         String userName = UserDAO.currentUser.getUserName();
         int userId = UserDAO.currentUser.getUserId();
         String type = typeCB.getValue();
+        String dentistName = dentistCB.getValue();
         
         //Show an error message if any of the fields were left blank
         try {
-            checkForEmptyFields(date, sHour, eHour, type);
+            checkForEmptyFields(date, sHour, eHour, type, dentistName);
         } catch (InputException ex) {
             System.out.println(ex);
             System.out.println(ex);
@@ -157,7 +171,7 @@ public class AddAppointmentController implements Initializable {
         
         //Show an error message if the appointment times overlap with an existing appointment
         try {
-            checkForOverlap(sLDateTime, eLDateTime);
+            checkForOverlap(sLDateTime, eLDateTime, dentistName);
              } catch (OverlapAppException ex) {
             System.out.println(ex);
             Alert alert = new Alert(AlertType.WARNING);
@@ -173,6 +187,7 @@ public class AddAppointmentController implements Initializable {
             app.setCustomerId(customerId);
             app.setUserId(userId);
             app.setType(type);
+            app.setDentistName(dentistName);
             app.setStart(sLDateTime);
             app.setEnd(eLDateTime);
 
@@ -182,6 +197,7 @@ public class AddAppointmentController implements Initializable {
        
     }
     
+    
     /**
      * 
      * @param date
@@ -190,7 +206,7 @@ public class AddAppointmentController implements Initializable {
      * @param type
      * @throws InputException if any fields are blank
      */
-    public void checkForEmptyFields(LocalDate date, String start, String end, String type) throws InputException{
+    public void checkForEmptyFields(LocalDate date, String start, String end, String type, String dentistName) throws InputException{
         error.clear();
         
         if(date == null){
@@ -206,6 +222,10 @@ public class AddAppointmentController implements Initializable {
        
         if(type == null){
             error.add("Please select an appointment type");
+        }
+        
+        if (dentistName == null) {
+            error.add("Please select a dentist");
         }
         
         if(!error.isEmpty()){
@@ -255,14 +275,27 @@ public class AddAppointmentController implements Initializable {
      * @throws OverlapAppException if the appointment times overlap an existing appointment
      * 
      */
-    public void checkForOverlap(LocalDateTime start, LocalDateTime end) throws OverlapAppException{
+    public void checkForOverlap(LocalDateTime start, LocalDateTime end, String dentistName) throws OverlapAppException{
         try {
-            if(AppointmentDAO.getAppointments(start, end).size() > 0)
+            if(AppointmentDAO.getAppointments(start, end, dentistName).size() > 0)
                 throw new OverlapAppException();
         } catch (SQLException ex) {
             System.out.println(ex);
         }
      
+    }
+    
+    @FXML
+    public void searchPatientHandler(ActionEvent event) {
+        if (patientSearchTxt.getText() == null) {
+            return;
+        } else {
+            String name = patientSearchTxt.getText();
+            
+            customerTv.setItems(CustomerDAO.getCustomerByName(name));
+            customerCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            addressCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getAddress()));
+        }
     }
     
     /**
@@ -285,7 +318,8 @@ public class AddAppointmentController implements Initializable {
         }
     });
         
-        ObservableList<String> types = FXCollections.observableArrayList("First Meeting", "First Consult", "Update", "Consult");
+        ObservableList<String> types = FXCollections.observableArrayList("Check-up", "Cleaning", "Tooth Extraction", "Root Canal", "Gum Care", "Counseling", "Dentures", "Tooth Pain");
+        ObservableList<String> dentists = FXCollections.observableArrayList(DentistDAO.getAllDentists());
         ObservableList<String> startTimes = FXCollections.observableArrayList();
         ObservableList<String> endTimes = FXCollections.observableArrayList();
         ObservableList<Customer> customers = FXCollections.observableArrayList(CustomerDAO.getAllCustomers());
@@ -315,6 +349,7 @@ public class AddAppointmentController implements Initializable {
         endTimes.add("17:00");
 
         typeCB.setItems(types);
+        dentistCB.setItems(dentists);
         startTimeCB.setItems(startTimes);
         endTimeCB.setItems(endTimes);
         customerTv.setItems(customers);

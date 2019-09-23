@@ -142,4 +142,43 @@ public class CustomerDAO {
         //Delete customer address
         AddressDAO.deleteAddress(customer.getAddress());
     }
+    
+    public static ObservableList<Customer> getCustomerByName(String name) {
+        ObservableList<Customer> searchedCustomer = FXCollections.observableArrayList();
+        
+        String query = "SELECT customerId, customerName, customer.addressId, active, address, address2, address.cityId, postalCode, phone, city, city.countryId, country  FROM customer " +
+                       "INNER JOIN address ON customer.addressID = address.addressId " +
+                       "INNER JOIN city ON address.cityId = city.cityId " +
+                       "INNER JOIN country ON city.countryId = country.countryId " +
+                       "WHERE customerName LIKE ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + name + "%");
+            ResultSet rs = stmt.executeQuery();
+                       while(rs.next()) {
+                 int id = (rs.getInt("customerId"));
+                String cName = (rs.getString("customerName"));
+                int active = (rs.getInt("active"));
+                int addressId = (rs.getInt("addressId"));
+                String addressOne = (rs.getString("address"));
+                String addressTwo = (rs.getString("address2"));
+                String postal = (rs.getString("postalCode"));
+                String phoneNum = (rs.getString("phone"));
+                String tempCity = (rs.getString("city"));
+                int cityId = (rs.getInt("cityId"));
+                Country country = new Country();
+                country.setCountryId(rs.getInt("countryId"));
+                country.setCountry(rs.getString("country"));
+                
+                
+                City city = new City(cityId, tempCity, country);
+                Address address = new Address(addressId, addressOne, addressTwo, city, postal, phoneNum);
+                Customer customer = new Customer(id, cName, address, active);
+                searchedCustomer.add(customer);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return searchedCustomer;
+    }
 }
