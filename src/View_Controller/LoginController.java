@@ -133,13 +133,21 @@ public class LoginController implements Initializable {
             //record the successful login attempt then close the txt file
             outputFile.println("Login successful " + userName + " " + ldt);
             outputFile.close();
-            Parent mainView = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
-            Scene addPartScene = new Scene(mainView);
-        
+            if (userName.equals("admin")) {
+                Parent mainView = FXMLLoader.load(getClass().getResource("AdminScreen.fxml"));
+                Scene addPartScene = new Scene(mainView);
 
-            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-            window.setScene(addPartScene);
-            window.show();
+                Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+                window.setScene(addPartScene);
+                window.show();
+            }else {
+                Parent mainView = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+                Scene addPartScene = new Scene(mainView);
+
+                Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+                window.setScene(addPartScene);
+                window.show();
+                }
             }
         }
         
