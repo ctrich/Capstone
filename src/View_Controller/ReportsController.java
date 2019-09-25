@@ -6,12 +6,9 @@
 package View_Controller;
 
 import DAO.AppointmentDAO;
-import DAO.StateDAO;
 import DAO.DentistDAO;
 import DAO.ReportsDAO;
-import DAO.UserDAO;
 import Model.Appointment;
-import Model.State;
 import Model.ReportAppByType;
 import java.io.IOException;
 import java.net.URL;
@@ -37,11 +34,10 @@ import javafx.stage.Stage;
 
 /**
  * FXML Controller class
- *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class ReportsController implements Initializable  {
 

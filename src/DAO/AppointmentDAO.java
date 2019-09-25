@@ -21,10 +21,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class AppointmentDAO {
     
@@ -311,34 +312,41 @@ public class AppointmentDAO {
      * @return a list of appointments that overlap the entered times excluding the entered appointment
      * @throws SQLException 
      */
-    public static ObservableList<Appointment> getAppointments(Appointment app, LocalDateTime start, LocalDateTime end) throws SQLException {
+    public static ObservableList<Appointment> getAppointments(Appointment app, LocalDateTime start, LocalDateTime end, String dentistName) throws SQLException {
        
         
         Timestamp sTime = changeTimetoUTC(start);
         Timestamp eTime = changeTimetoUTC(end);
         
-        String sqlQuery =   "SELECT customer.customerName, customer.customerId, user.userId, user.userName, appointmentId, appointment.type, appointment.start, appointment.end "
+        String sqlQuery =   "SELECT customer.customerName, customer.customerId, user.userId, user.userName,dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                           + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                           + "INNER JOIN user ON appointment.userId = user.userId "
+                          + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "
                           + "WHERE (appointment.start >= ? AND appointment.end <= ?) "
                           + "AND appointment.appointmentId != ? "
+                          + "AND dentist.lastname = ? "
                           + "OR (appointment.start <= ? AND appointment.end >= ?) "
                           + "AND appointment.appointmentId != ? "
+                          + "AND dentist.lastname = ? "
                           + "OR (appointment.start BETWEEN ? AND ? OR appointment.end BETWEEN ? AND ?) "
-                          + "AND appointment.appointmentId != ?";
+                          + "AND appointment.appointmentId != ? "
+                          + "AND dentist.lastname = ?";
       
           PreparedStatement pStmt = conn.prepareStatement(sqlQuery);
           pStmt.setTimestamp(1, sTime);
           pStmt.setTimestamp(2, eTime);
           pStmt.setInt(3, app.getAppointmentId());
-          pStmt.setTimestamp(4, sTime);
-          pStmt.setTimestamp(5, eTime);
-          pStmt.setInt(6, app.getAppointmentId());
-          pStmt.setTimestamp(7, sTime);
-          pStmt.setTimestamp(8, eTime);
+          pStmt.setString(4, dentistName);
+          pStmt.setTimestamp(5, sTime);
+          pStmt.setTimestamp(6, eTime);
+          pStmt.setInt(7, app.getAppointmentId());
+          pStmt.setString(8, dentistName);
           pStmt.setTimestamp(9, sTime);
           pStmt.setTimestamp(10, eTime);
-          pStmt.setInt(11, app.getAppointmentId());
+          pStmt.setTimestamp(11, sTime);
+          pStmt.setTimestamp(12, eTime);
+          pStmt.setInt(13, app.getAppointmentId());
+          pStmt.setString(14, dentistName);
           ResultSet rs = pStmt.executeQuery(); 
             
           return getAppointments(sqlQuery, pStmt, rs);

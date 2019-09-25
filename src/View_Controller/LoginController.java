@@ -38,11 +38,10 @@ import javafx.stage.Stage;
 
 /**
  * FXML Controller class
- *
-  * @author Chris Richardson
+ * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class LoginController implements Initializable {
 
@@ -133,6 +132,7 @@ public class LoginController implements Initializable {
             //record the successful login attempt then close the txt file
             outputFile.println("Login successful " + userName + " " + ldt);
             outputFile.close();
+            //if the user logs in with admin credentials then go to the admin screen
             if (userName.equals("admin")) {
                 Parent mainView = FXMLLoader.load(getClass().getResource("AdminScreen.fxml"));
                 Scene addPartScene = new Scene(mainView);

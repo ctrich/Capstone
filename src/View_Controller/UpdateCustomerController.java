@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class UpdateCustomerController implements Initializable {
 

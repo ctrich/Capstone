@@ -17,10 +17,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class StateDAO {
     
@@ -74,6 +75,11 @@ public class StateDAO {
         return state;
     }
     
+    /**
+     * 
+     * @param state 
+     * Add a state to the database when a new customer is saved
+     */
     public static void addState(State state) {
      String insert = "INSERT INTO state (state, createDate, createdBy, lastUpdate, lastUpdateBy) "
                    + "VALUES (?, now(), ?, now(), ?)";
@@ -90,6 +96,11 @@ public class StateDAO {
         }
     }
     
+    /**
+     * 
+     * @param state 
+     * delete a state from the database when a customer is deleted
+     */
     public static void deleteState(State state) {
         String delete = "DELETE FROM state WHERE stateId = ?";
         
@@ -103,6 +114,11 @@ public class StateDAO {
         }
     }
     
+    /**
+     * 
+     * @param state 
+     * Update the customers state information in the database
+     */
     public static void updateState(State state) {
         String update = "UPDATE state SET state = ? WHERE stateId = ?";
         
@@ -115,6 +131,5 @@ public class StateDAO {
             Logger.getLogger(StateDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-  
     
 }

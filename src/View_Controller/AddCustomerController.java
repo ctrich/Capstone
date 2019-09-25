@@ -9,7 +9,6 @@ import DAO.AddressDAO;
 import DAO.CityDAO;
 import DAO.StateDAO;
 import DAO.CustomerDAO;
-import Exception.FormatException;
 import Exception.InputException;
 import Model.Address;
 import Model.City;
@@ -20,11 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,17 +31,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
  *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class AddCustomerController implements Initializable {
 
@@ -117,7 +110,7 @@ public class AddCustomerController implements Initializable {
         String enteredPostal = postalTxt.getText();
         String enteredPhone = phoneTxt.getText();
         
-        //Show an error message if there are any blank fields
+        //Show an error message if there are any blank fields and validate info
         try {
             Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, enteredState, enteredCity, enteredPostal, enteredPhone);
             Validation.validateName(enteredName);
@@ -145,22 +138,22 @@ public class AddCustomerController implements Initializable {
             alert.showAndWait();
             return;
         }
-       
+       //save a new state to the database
         State state = new State();
         state.setState(enteredState);
         StateDAO.addState(state);
-
+        //save a new city to the database
         City city = new City();
         city.setCity(enteredCity);
         city.setState(StateDAO.getStateByName(enteredState));
         CityDAO.addCity(city);
-        
+        //save the address and other customer information to the database
         Address address = new Address(enteredAddress, enteredAddress2, CityDAO.getCityByName(enteredCity), enteredPostal, enteredPhone);
         AddressDAO.addAddress(address);
         address.setAddressId(AddressDAO.getAddressId(address.getAddress(), address.getPostalCode()));
         Customer customer = new Customer(enteredName, address, 1);
         CustomerDAO.addCustomer(customer);
-            
+        //return to the main screen
         changeScene(event, "MainScreen.fxml");
         
         

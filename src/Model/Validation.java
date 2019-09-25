@@ -5,13 +5,21 @@
  */
 package Model;
 
+import DAO.AppointmentDAO;
 import Exception.InputException;
+import Exception.OverlapAppException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
  *
- * @author chris
+ * @author Chris Richardson
+ * Student ID: 000895452
+ * email: cric215@wgu.edu
+ * Class: C868
  */
 public class Validation {
     public static ObservableList<String> error = FXCollections.observableArrayList();
@@ -30,6 +38,12 @@ public class Validation {
      }
    }
     
+    /**
+     * 
+     * @param city
+     * @throws InputException 
+     * throws an exception if the city contains anything other than letters
+     */
     public static void validateCity(String city) throws InputException{
         error.clear();
         if(!city.matches( "[a-zA-z]+([ '-][a-zA-Z]+)*" )){
@@ -101,6 +115,12 @@ public class Validation {
          throw new InputException("Phone field should only contain numbers");
     }
      
+    /**
+     * 
+     * @param state
+     * @throws InputException 
+     * throws an exception if the state is not valid
+     */
     public static void validateState(String state)throws InputException {
         error.clear();
         
@@ -111,12 +131,117 @@ public class Validation {
         }
     }
     
+    /**
+     * 
+     * @param zip
+     * @throws InputException 
+     * throws an exception if the postal code isn't a five digit number
+     */
     public static void validateZip(String zip)throws InputException {
         error.clear();
         if (!zip.matches("\\b\\d{5}(?:-\\d{4})?\\b")){
             error.add("Enter a five digit postal code");
             throw new InputException("Enter a five digit postal code");
         }
+    }
+    
+    /**
+     * 
+     * @param start
+     * @param end
+     * @throws OverlapAppException if the appointment times overlap an existing appointment
+     * 
+     */
+    public static void checkForOverlap(LocalDateTime start, LocalDateTime end, String dentistName) throws OverlapAppException{
+        try {
+            if(AppointmentDAO.getAppointments(start, end, dentistName).size() > 0)
+                throw new OverlapAppException();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+     
+    }
+    
+        /**
+     * 
+     * @param app
+     * @param start
+     * @param end
+     * @throws OverlapAppException if the entered appointment overlaps any existing appointments
+     * 
+     */
+    public static void checkUpdateForOverlap(Appointment app, LocalDateTime start, LocalDateTime end, String dentistName) throws OverlapAppException{
+        try {
+            if(AppointmentDAO.getAppointments(app, start, end, dentistName).size() > 0)
+                throw new OverlapAppException();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+     
+    }
+    
+    
+        /**
+     * 
+     * @param date
+     * @param start
+     * @param end
+     * @param type
+     * @throws InputException if any fields are blank
+     */
+    public static void checkAppForEmptyFields(LocalDate date, String start, String end, String type, String dentistName) throws InputException{
+        error.clear();
+        
+        if(date == null){
+            error.add("Please select a date");
+        }
+        if(start == null){
+            error.add("Please select a starting time");
+        }
+       
+        if(end == null){
+            error.add("Please select an ending time");
+        }
+       
+        if(type == null){
+            error.add("Please select an appointment type");
+        }
+        
+        if (dentistName == null) {
+            error.add("Please select a dentist");
+        }
+        
+        if(!error.isEmpty()){
+            throw new InputException("Please make a selection for all fields");
+        }
+        
+    }
+    
+        /**
+     * 
+     * @param date
+     * @param start
+     * @param end
+     * @throws InputException if an;y fields are left blank
+     */
+    public static void checkAppForEmptyFields(LocalDate date, String start, String end) throws InputException{
+        error.clear();
+        
+        if(date == null){
+            error.add("Please select a date");
+        }
+        if(start == null){
+            error.add("Please select a starting time");
+        }
+       
+        if(end == null){
+            error.add("Please select an ending time");
+        }
+        
+        if(!error.isEmpty()){
+            throw new InputException("Please make a selection for all fields");
+        }
+        
     }
     
 }

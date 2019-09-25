@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class UserDAO {
       
@@ -85,6 +85,12 @@ public static User currentUser = new User();
         
     }
     
+    /**
+     * 
+     * @param username
+     * @param password 
+     * Add a new user to the database
+     */
     public static void addUser(String username, String password) {
         String insert = "INSERT INTO user(userName, password, active, createDate, createdBy, lastUpdate, lastUpdateBy) "
                       + "VALUES(?, ?, 1, now(), 'admin', now(), 'admin')";

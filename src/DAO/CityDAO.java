@@ -18,10 +18,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class CityDAO {
     
@@ -76,7 +77,11 @@ public class CityDAO {
         }
        return city;
    }
-    
+    /**
+     * 
+     * @param city 
+     * Add a new city to the database when a new customer is saved
+     */
    public static void addCity(City city) {
        String insert = "INSERT INTO city (city, stateId, createDate, createdBy, lastUpdate, lastUpdateBy) "
                      + "VALUES (?, ?, now(), ?, now(), ?)";
@@ -93,7 +98,11 @@ public class CityDAO {
             Logger.getLogger(CityDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
    }
-   
+   /**
+    * 
+    * @param city 
+    * deletes the city when the customer information is deleted
+    */
    public static void deleteCity(City city) {
        String delete = "DELETE FROM city WHERE cityId = ?";
        
@@ -107,6 +116,11 @@ public class CityDAO {
         }
    }
    
+   /**
+    * 
+    * @param city 
+    * Updates the customers city
+    */
    public static void updateCity(City city) {
        String update = "UPDATE city SET city = ? WHERE cityId = ?";
        

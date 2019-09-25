@@ -10,9 +10,9 @@ import DAO.DentistDAO;
 import Exception.InputException;
 import Exception.OverlapAppException;
 import Model.Appointment;
+import Model.Validation;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -37,12 +37,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
  *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class UpdateAppointmentController implements Initializable {
 
@@ -94,10 +93,10 @@ public class UpdateAppointmentController implements Initializable {
         
         //show an error message to the user if any fields are left blank
         try {
-            checkForEmptyFields(date, sHour, eHour);
+            Validation.checkAppForEmptyFields(date, sHour, eHour);
         } catch (InputException ex) {
             System.out.println(ex);
-            String errors = error.stream().collect(Collectors.joining(" \n "));
+            String errors = Validation.error.stream().collect(Collectors.joining(" \n "));
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(errors);
@@ -130,7 +129,7 @@ public class UpdateAppointmentController implements Initializable {
         
         //show and error message if the selected appointment times overlap any existing appointments
         try {
-            checkForOverlap(selectedApp, sLDateTime, eLDateTime);
+            Validation.checkUpdateForOverlap(selectedApp, sLDateTime, eLDateTime, dentistName);
         } catch (OverlapAppException ex) {
             System.out.println(ex);          
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -151,32 +150,7 @@ public class UpdateAppointmentController implements Initializable {
         
     }
     
-    /**
-     * 
-     * @param date
-     * @param start
-     * @param end
-     * @throws InputException if an;y fields are left blank
-     */
-    public void checkForEmptyFields(LocalDate date, String start, String end) throws InputException{
-        error.clear();
-        
-        if(date == null){
-            error.add("Please select a date");
-        }
-        if(start == null){
-            error.add("Please select a starting time");
-        }
-       
-        if(end == null){
-            error.add("Please select an ending time");
-        }
-        
-        if(!error.isEmpty()){
-            throw new InputException("Please make a selection for all fields");
-        }
-        
-    }
+
 /**
  * 
  * @param app 
@@ -226,23 +200,6 @@ public class UpdateAppointmentController implements Initializable {
         window.show();
     }
     
-    /**
-     * 
-     * @param app
-     * @param start
-     * @param end
-     * @throws OverlapAppException if the entered appointment overlaps any existing appointments
-     * 
-     */
-    public void checkForOverlap(Appointment app, LocalDateTime start, LocalDateTime end) throws OverlapAppException{
-        try {
-            if(AppointmentDAO.getAppointments(app, start, end).size() > 0)
-                throw new OverlapAppException();
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-     
-    }
     
     /**
      * 

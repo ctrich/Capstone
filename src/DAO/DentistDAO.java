@@ -17,11 +17,17 @@ import javafx.collections.ObservableList;
 
 /**
  *
- * @author chris
+ * @author Chris Richardson
+ * Student ID: 000895452
+ * email: cric215@wgu.edu
+ * Class: C868
  */
 public class DentistDAO {
     
-    
+    /**
+     * 
+     * @return all dentists in the database in an observablelist
+     */
     public static ObservableList<String> getAllDentists() {
         ObservableList<String> dentists = FXCollections.observableArrayList();
         try {
@@ -40,6 +46,12 @@ public class DentistDAO {
         return dentists;
     }
     
+    /**
+     * 
+     * @param name
+     * @return dentist
+     * searches database by name
+     */
     public static int getDentistIdByName(String name) {
         int dentistId = 0;
             String sqlStatement = "Select dentistId from dentist where lastName = ?";
@@ -57,6 +69,11 @@ public class DentistDAO {
         return dentistId;
     }
     
+    /**
+     * 
+     * @param name 
+     * saves a new dentist to the database
+     */
     public static void insertDentist(String name) {
         String insert = "INSERT INTO dentist(lastName) VALUES(?)";
         

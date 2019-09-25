@@ -29,7 +29,10 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
- * @author chris
+ * @author Chris Richardson
+ * Student ID: 000895452
+ * email: cric215@wgu.edu
+ * Class: C868
  */
 public class AdminScreenController implements Initializable {
 
@@ -65,7 +68,11 @@ public class AdminScreenController implements Initializable {
         }
         
     }
-    
+    /**
+     * 
+     * @param event 
+     * saves a new dentist to the database
+     */
     @FXML
     public void saveDentistHandler(ActionEvent event) {
         if (dentistNameTxt.getText() == null) {
@@ -76,6 +83,12 @@ public class AdminScreenController implements Initializable {
         }
     }
     
+    /**
+     * 
+     * @param event
+     * @throws IOException 
+     * sign out and return to the sign in screen
+     */
     @FXML
     void signOutHandler(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

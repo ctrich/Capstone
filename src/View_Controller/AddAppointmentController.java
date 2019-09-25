@@ -13,6 +13,7 @@ import Exception.InputException;
 import Exception.OverlapAppException;
 import Model.Appointment;
 import Model.Customer;
+import Model.Validation;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -20,8 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -47,12 +46,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
  *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class AddAppointmentController implements Initializable {
 
@@ -134,11 +132,11 @@ public class AddAppointmentController implements Initializable {
         
         //Show an error message if any of the fields were left blank
         try {
-            checkForEmptyFields(date, sHour, eHour, type, dentistName);
+            Validation.checkAppForEmptyFields(date, sHour, eHour, type, dentistName);
         } catch (InputException ex) {
             System.out.println(ex);
             System.out.println(ex);
-            String errors = error.stream().collect(Collectors.joining(" \n "));
+            String errors = Validation.error.stream().collect(Collectors.joining(" \n "));
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText(errors);
@@ -171,7 +169,7 @@ public class AddAppointmentController implements Initializable {
         
         //Show an error message if the appointment times overlap with an existing appointment
         try {
-            checkForOverlap(sLDateTime, eLDateTime, dentistName);
+            Validation.checkForOverlap(sLDateTime, eLDateTime, dentistName);
              } catch (OverlapAppException ex) {
             System.out.println(ex);
             Alert alert = new Alert(AlertType.WARNING);
@@ -197,43 +195,7 @@ public class AddAppointmentController implements Initializable {
        
     }
     
-    
-    /**
-     * 
-     * @param date
-     * @param start
-     * @param end
-     * @param type
-     * @throws InputException if any fields are blank
-     */
-    public void checkForEmptyFields(LocalDate date, String start, String end, String type, String dentistName) throws InputException{
-        error.clear();
-        
-        if(date == null){
-            error.add("Please select a date");
-        }
-        if(start == null){
-            error.add("Please select a starting time");
-        }
-       
-        if(end == null){
-            error.add("Please select an ending time");
-        }
-       
-        if(type == null){
-            error.add("Please select an appointment type");
-        }
-        
-        if (dentistName == null) {
-            error.add("Please select a dentist");
-        }
-        
-        if(!error.isEmpty()){
-            throw new InputException("Please make a selection for all fields");
-        }
-        
-    }
-    
+
     /**
      * 
      * @param event
@@ -268,23 +230,12 @@ public class AddAppointmentController implements Initializable {
         window.show();
     }
     
+
     /**
      * 
-     * @param start
-     * @param end
-     * @throws OverlapAppException if the appointment times overlap an existing appointment
-     * 
+     * @param event 
+     * search the database for a customer by name and populate the table
      */
-    public void checkForOverlap(LocalDateTime start, LocalDateTime end, String dentistName) throws OverlapAppException{
-        try {
-            if(AppointmentDAO.getAppointments(start, end, dentistName).size() > 0)
-                throw new OverlapAppException();
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-     
-    }
-    
     @FXML
     public void searchPatientHandler(ActionEvent event) {
         if (patientSearchTxt.getText() == null) {
@@ -302,7 +253,7 @@ public class AddAppointmentController implements Initializable {
      * 
      * @param url
      * @param rb 
-     * Populate the comboboxes and tableviews
+     * Populate the tableviews
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

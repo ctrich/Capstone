@@ -17,8 +17,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,11 +41,10 @@ import javafx.stage.Stage;
 
 /**
  * FXML Controller class
- *
  * @author Chris Richardson
  * Student ID: 000895452
  * email: cric215@wgu.edu
- * Class: C195
+ * Class: C868
  */
 public class MainScreenController implements Initializable {
 
@@ -66,9 +63,6 @@ public class MainScreenController implements Initializable {
     
     @FXML
     private TextField patientSearchTxt;
-    
-    @FXML
-    private Button viewByWeekBtn;
     
     @FXML
     private Button signOutBtn;
@@ -143,16 +137,7 @@ public class MainScreenController implements Initializable {
     private TableColumn<Appointment, LocalDateTime> appEndCol;
     
 
-    /**
-     * 
-     * @param event
-     * @throws IOException 
-     * Takes the user to the view by week scene
-     */
-    @FXML
-    public void viewByWeekHandler(ActionEvent event) throws IOException {
-         changeScene(event, "AppointmentWeek.fxml");
-    }
+  
     /**
      * 
      * @param event
@@ -236,6 +221,11 @@ public class MainScreenController implements Initializable {
        changeScene(event, "AddCustomer.fxml");
     }
     
+    /**
+     * 
+     * @param event 
+     * Search for patients in the database and populate the tableview with the results
+     */
     @FXML
     public void searchPatientHandler(ActionEvent event) {
         if (patientSearchTxt.getText() == null) {
@@ -256,6 +246,11 @@ public class MainScreenController implements Initializable {
         }
     }
     
+    /**
+     * 
+     * @param event 
+     * populate the tableview with all patients
+     */
     @FXML
     public void viewAllHandler(ActionEvent event) {
         populateCustomerTable();
