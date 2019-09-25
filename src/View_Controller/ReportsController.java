@@ -6,12 +6,12 @@
 package View_Controller;
 
 import DAO.AppointmentDAO;
-import DAO.CountryDAO;
+import DAO.StateDAO;
 import DAO.DentistDAO;
 import DAO.ReportsDAO;
 import DAO.UserDAO;
 import Model.Appointment;
-import Model.Country;
+import Model.State;
 import Model.ReportAppByType;
 import java.io.IOException;
 import java.net.URL;

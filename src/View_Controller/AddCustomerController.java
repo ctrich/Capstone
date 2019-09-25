@@ -7,13 +7,13 @@ package View_Controller;
 
 import DAO.AddressDAO;
 import DAO.CityDAO;
-import DAO.CountryDAO;
+import DAO.StateDAO;
 import DAO.CustomerDAO;
 import Exception.FormatException;
 import Exception.InputException;
 import Model.Address;
 import Model.City;
-import Model.Country;
+import Model.State;
 import Model.Customer;
 import Model.Validation;
 import java.io.IOException;
@@ -76,10 +76,10 @@ public class AddCustomerController implements Initializable {
     private TextField postalTxt;
     
     @FXML
-    private ComboBox<String> cityCB;
+    private TextField cityTxt;
 
     @FXML
-    private ComboBox<String> countryCB;
+    private TextField stateTxt;
     
     /**
      * 
@@ -99,21 +99,6 @@ public class AddCustomerController implements Initializable {
         }
     }
     
-    /**
-     * 
-     * @param event 
-     * Populate the cities combobox based on the selected country
-     */
-    @FXML
-    void populateCitiesHandler(ActionEvent event) {
-          Country selectedCountry = CountryDAO.getCountryByName(countryCB.getValue());
-
-        //get the city names from a list
-        cityCB.setItems(CityDAO.getCitiesByCountry(selectedCountry).stream()
-                                                                   .map(city -> city.getCity())
-                                                                   .collect(Collectors.toCollection(FXCollections::observableArrayList)));
-        
-    }
     
     /**
      * 
@@ -127,15 +112,18 @@ public class AddCustomerController implements Initializable {
         String enteredName = nameTxt.getText(); 
         String enteredAddress = addressTxt.getText();
         String enteredAddress2 = address2Txt.getText();
-        String selectedCountry = countryCB.getValue();
-        String selectedCity = cityCB.getValue();
+        String enteredState = stateTxt.getText().toUpperCase();
+        String enteredCity = cityTxt.getText();
         String enteredPostal = postalTxt.getText();
         String enteredPhone = phoneTxt.getText();
         
         //Show an error message if there are any blank fields
         try {
-            Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, selectedCountry, selectedCity, enteredPostal, enteredPhone);
+            Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, enteredState, enteredCity, enteredPostal, enteredPhone);
             Validation.validateName(enteredName);
+            Validation.validateState(enteredState);
+            Validation.validateZip(enteredPostal);
+            Validation.validateCity(enteredCity);
         } catch (InputException ex) {
             System.out.println(ex);
             String errors = Validation.error.stream().collect(Collectors.joining(" \n "));
@@ -158,10 +146,16 @@ public class AddCustomerController implements Initializable {
             return;
         }
        
-        Country country = CountryDAO.getCountryByName(selectedCountry);
-        City city = CityDAO.getCityByName(selectedCity);
-        city.setCountry(country);
-        Address address = new Address(enteredAddress, enteredAddress2, city, enteredPostal, enteredPhone);
+        State state = new State();
+        state.setState(enteredState);
+        StateDAO.addState(state);
+
+        City city = new City();
+        city.setCity(enteredCity);
+        city.setState(StateDAO.getStateByName(enteredState));
+        CityDAO.addCity(city);
+        
+        Address address = new Address(enteredAddress, enteredAddress2, CityDAO.getCityByName(enteredCity), enteredPostal, enteredPhone);
         AddressDAO.addAddress(address);
         address.setAddressId(AddressDAO.getAddressId(address.getAddress(), address.getPostalCode()));
         Customer customer = new Customer(enteredName, address, 1);
@@ -194,12 +188,7 @@ public class AddCustomerController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-                
-       //Iterate through the list and return an observablelist of country names
-        countryCB.setItems(CountryDAO.getCountries().stream()
-                                                    .map(country -> country.getCountry())
-                                                    .collect(Collectors.toCollection(FXCollections::observableArrayList)));       
-
+               
   
     }    
     

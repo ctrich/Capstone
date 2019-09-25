@@ -86,8 +86,8 @@ public static User currentUser = new User();
     }
     
     public static void addUser(String username, String password) {
-        String insert = "INSERT INTO user(userName, password, active, createDate, createdBy, lastUpdate, lastUpdatedBy) "
-                      + "VALUES(?, ?, 1, now(), 'admin', now(), admin)";
+        String insert = "INSERT INTO user(userName, password, active, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                      + "VALUES(?, ?, 1, now(), 'admin', now(), 'admin')";
         
         PreparedStatement stmt;
     try {

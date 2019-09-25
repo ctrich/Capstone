@@ -110,7 +110,7 @@ public class MainScreenController implements Initializable {
     private TableColumn<Customer, String> customerCityTvCol;
 
     @FXML
-    private TableColumn<Customer, String> customerCountryTvCol;
+    private TableColumn<Customer, String> customerStateTvCol;
 
     @FXML
     private TableColumn<Customer, Integer> customerActiveTvCol;
@@ -252,7 +252,7 @@ public class MainScreenController implements Initializable {
             customerAdd2TvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getAddressTwo()));
             customerPostalTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getPostalCode()));
             customerCityTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCity()));
-            customerCountryTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCountry().getCountry()));
+            customerStateTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getState().getState()));
         }
     }
     
@@ -349,7 +349,7 @@ public class MainScreenController implements Initializable {
         customerAdd2TvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getAddressTwo()));
         customerPostalTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getPostalCode()));
         customerCityTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCity()));
-        customerCountryTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getCountry().getCountry()));
+        customerStateTvCol.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getAddress().getCity().getState().getState()));
     }
     /**
      * Populates the appointments table with all the appointments

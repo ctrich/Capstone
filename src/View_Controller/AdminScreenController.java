@@ -60,6 +60,8 @@ public class AdminScreenController implements Initializable {
             return;
         }else {
             UserDAO.addUser(addUserTxt.getText(), userPasswordTxt.getText());
+            addUserTxt.clear();
+            userPasswordTxt.clear();
         }
         
     }
@@ -70,6 +72,7 @@ public class AdminScreenController implements Initializable {
             return;
         } else {
             DentistDAO.insertDentist(dentistNameTxt.getText());
+            dentistNameTxt.clear();
         }
     }
     

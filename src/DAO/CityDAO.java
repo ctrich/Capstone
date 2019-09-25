@@ -7,7 +7,7 @@ package DAO;
 
 import static DAO.DBConnection.conn;
 import Model.City;
-import Model.Country;
+import Model.State;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,14 +27,14 @@ public class CityDAO {
     
     /**
      * 
-     * @param country
-     * @return a list of cities that are associated with the selected country
+     * @param state
+     * @return a list of cities that are associated with the selected state
      */
-    public static ObservableList<City> getCitiesByCountry(Country country){
+    public static ObservableList<City> getCitiesBystate(State state){
         ObservableList<City> cities = FXCollections.observableArrayList();
         String sqlQuery = "SELECT city, cityId FROM city "
-                        + "INNER JOIN country ON city.countryId = country.countryId "
-                        + "WHERE country.countryId = " + country.getCountryId();
+                        + "INNER JOIN state ON city.stateId = state.stateId "
+                        + "WHERE state.stateId = " + state.getStateId();
         
         try {
             Statement stmt = conn.createStatement();
@@ -77,4 +77,46 @@ public class CityDAO {
        return city;
    }
     
+   public static void addCity(City city) {
+       String insert = "INSERT INTO city (city, stateId, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                     + "VALUES (?, ?, now(), ?, now(), ?)";
+       
+        try {
+            PreparedStatement stmt = conn.prepareStatement(insert);
+            stmt.setString(1, city.getCity());
+            stmt.setInt(2, city.getState().getStateId());
+            stmt.setString(3, UserDAO.currentUser.getUserName());
+            stmt.setString(4, UserDAO.currentUser.getUserName());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
+   public static void deleteCity(City city) {
+       String delete = "DELETE FROM city WHERE cityId = ?";
+       
+        try {
+            PreparedStatement stmt = conn.prepareStatement(delete);
+            stmt.setInt(1, city.getCityId());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
+   public static void updateCity(City city) {
+       String update = "UPDATE city SET city = ? WHERE cityId = ?";
+       
+        try {
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, city.getCity());
+            stmt.setInt(2, city.getCityId());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(CityDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
 }

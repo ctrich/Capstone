@@ -7,12 +7,12 @@ package View_Controller;
 
 import DAO.AddressDAO;
 import DAO.CityDAO;
-import DAO.CountryDAO;
+import DAO.StateDAO;
 import DAO.CustomerDAO;
 import Exception.InputException;
 import Model.Address;
 import Model.City;
-import Model.Country;
+import Model.State;
 import Model.Customer;
 import Model.Validation;
 import java.io.IOException;
@@ -20,8 +20,6 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +29,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -50,18 +47,18 @@ public class UpdateCustomerController implements Initializable {
      */
     @FXML
     private TextField nameTxt;
+    
+    @FXML
+    private TextField stateTxt;
+    
+    @FXML
+    private TextField cityTxt;
 
     @FXML
     private TextField addressTxt;
 
     @FXML
     private TextField address2Txt;
-
-    @FXML
-    private ComboBox<String> cityCB;
-
-    @FXML
-    private ComboBox<String> countryCB;
 
     @FXML
     private TextField phoneTxt;
@@ -84,15 +81,18 @@ public class UpdateCustomerController implements Initializable {
         String enteredName = nameTxt.getText();
         String enteredAddress = addressTxt.getText(); 
         String enteredAddress2 = address2Txt.getText();
-        String selectedCountry = countryCB.getValue();
-        String selectedCity = cityCB.getValue();
+        String selectedstate = stateTxt.getText().toUpperCase();
+        String selectedCity = cityTxt.getText();
         String enteredPostal = postalTxt.getText();
         String enteredPhone = phoneTxt.getText();
        
         //Show an error to the user if they left any of the customer fields blank
         try {
-            Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, selectedCountry, selectedCity, enteredPostal, enteredPhone);
+            Validation.checkForEmptyFields(enteredName, enteredAddress, enteredAddress2, selectedstate, selectedCity, enteredPostal, enteredPhone);
             Validation.validateName(enteredName);
+            Validation.validateState(selectedstate);
+            Validation.validateZip(enteredPostal);
+            Validation.validateCity(selectedCity);
         } catch (InputException ex) {
             System.out.println(ex);
             String errors = Validation.error.stream().collect(Collectors.joining(" \n "));
@@ -113,8 +113,13 @@ public class UpdateCustomerController implements Initializable {
             alert.showAndWait();
             return;
         }
-
-        City city = CityDAO.getCityByName(selectedCity);
+        State state = selectedCustomer.getAddress().getCity().getState();
+        state.setState(selectedstate);
+        City city = selectedCustomer.getAddress().getCity();
+        city.setCity(selectedCity);
+        CityDAO.updateCity(city);
+        StateDAO.updateState(state);
+        
         //send the updated info to the database
         Address address = new Address(selectedCustomer.getAddress().getAddressId(), enteredAddress, enteredAddress2, city, enteredPostal, enteredPhone);
         AddressDAO.updateAddress(address);
@@ -122,22 +127,6 @@ public class UpdateCustomerController implements Initializable {
         CustomerDAO.updatCustomer(customer);
         
         changeScene(event, "MainScreen.fxml");
-    }
-
-    /**
-     * 
-     * @param event 
-     * Populates the cities in the Combobox based on the selected country
-     */
-    @FXML
-    void populateCitiesHandler(ActionEvent event) {
-        Country selectedCountry = CountryDAO.getCountryByName(countryCB.getValue());
-       
-        //Use a lambda expression to get the city names from the ObservableList. Using a lamdbda allowed me to get the city names without having to create more lists and use a for loop
-        cityCB.setItems(CityDAO.getCitiesByCountry(selectedCountry).stream()
-                                                                   .map(city -> city.getCity())
-                                                                   .collect(Collectors.toCollection(FXCollections::observableArrayList)));
-
     }
     
     /**
@@ -149,8 +138,8 @@ public class UpdateCustomerController implements Initializable {
         nameTxt.setText(customer.getCustomerName());
         addressTxt.setText(customer.getAddress().getAddress());
         address2Txt.setText(customer.getAddress().getAddressTwo());
-        countryCB.setValue(customer.getAddress().getCity().getCountry().getCountry());
-        cityCB.setValue(customer.getAddress().getCity().getCity());
+        stateTxt.setText(customer.getAddress().getCity().getState().getState());
+        cityTxt.setText(customer.getAddress().getCity().getCity());
         postalTxt.setText(customer.getAddress().getPostalCode());
         phoneTxt.setText(customer.getAddress().getPhone());
         selectedCustomer = customer;
@@ -193,12 +182,6 @@ public class UpdateCustomerController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        //Populate the country Combobox using a lambda expression to get the country names
-       countryCB.setItems(CountryDAO.getCountries().stream()
-                                                   .map(country -> country.getCountry())
-                                                   .collect(Collectors.toCollection(FXCollections::observableArrayList)));  
-       
        
     }    
     

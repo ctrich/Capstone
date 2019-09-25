@@ -28,7 +28,7 @@
                         <TableColumn fx:id="customerAdd2TvCol" prefWidth="78.0" text="Address2" />
                         <TableColumn fx:id="customerPostalTvCol" prefWidth="93.0" text="Postal Code" />
                         <TableColumn fx:id="customerCityTvCol" prefWidth="81.0" text="City" />
-                        <TableColumn fx:id="customerCountryTvCol" prefWidth="73.0" text="Country" />
+                        <TableColumn fx:id="customerStateTvCol" prefWidth="73.0" text="state" />
                         <TableColumn fx:id="customerActiveTvCol" prefWidth="57.0" text="Active" />
                      </columns>
                   </TableView>

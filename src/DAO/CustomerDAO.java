@@ -8,7 +8,7 @@ package DAO;
 import static DAO.DBConnection.conn;
 import Model.Address;
 import Model.City;
-import Model.Country;
+import Model.State;
 import Model.Customer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -85,10 +85,10 @@ public class CustomerDAO {
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         
         try {
-            String getCustomers = "SELECT customerId, customerName, customer.addressId, active, address, address2, address.cityId, postalCode, phone, city, city.countryId, country  FROM customer " +
+            String getCustomers = "SELECT customerId, customerName, customer.addressId, active, address, address2, address.cityId, postalCode, phone, city, city.stateId, state  FROM customer " +
                                   "INNER JOIN address ON customer.addressID = address.addressId " +
                                   "INNER JOIN city ON address.cityId = city.cityId " +
-                                  "INNER JOIN country ON city.countryId = country.countryId;";
+                                  "INNER JOIN state ON city.stateId = state.stateId;";
             
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(getCustomers);
@@ -106,12 +106,12 @@ public class CustomerDAO {
                 String phoneNum = (rs.getString("phone"));
                 String tempCity = (rs.getString("city"));
                 int cityId = (rs.getInt("cityId"));
-                Country country = new Country();
-                country.setCountryId(rs.getInt("countryId"));
-                country.setCountry(rs.getString("country"));
+                State state = new State();
+                state.setStateId(rs.getInt("stateId"));
+                state.setState(rs.getString("state"));
                 
                 
-                City city = new City(cityId, tempCity, country);
+                City city = new City(cityId, tempCity, state);
                 Address address = new Address(addressId, addressOne, addressTwo, city, postal, phoneNum);
                 Customer customer = new Customer(id, name, address, active);
                 allCustomers.add(customer);
@@ -141,15 +141,17 @@ public class CustomerDAO {
         }
         //Delete customer address
         AddressDAO.deleteAddress(customer.getAddress());
+        CityDAO.deleteCity(customer.getAddress().getCity());
+        StateDAO.deleteState(customer.getAddress().getCity().getState());
     }
     
     public static ObservableList<Customer> getCustomerByName(String name) {
         ObservableList<Customer> searchedCustomer = FXCollections.observableArrayList();
         
-        String query = "SELECT customerId, customerName, customer.addressId, active, address, address2, address.cityId, postalCode, phone, city, city.countryId, country  FROM customer " +
+        String query = "SELECT customerId, customerName, customer.addressId, active, address, address2, address.cityId, postalCode, phone, city, city.stateId, state  FROM customer " +
                        "INNER JOIN address ON customer.addressID = address.addressId " +
                        "INNER JOIN city ON address.cityId = city.cityId " +
-                       "INNER JOIN country ON city.countryId = country.countryId " +
+                       "INNER JOIN state ON city.stateId = state.stateId " +
                        "WHERE customerName LIKE ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -166,12 +168,12 @@ public class CustomerDAO {
                 String phoneNum = (rs.getString("phone"));
                 String tempCity = (rs.getString("city"));
                 int cityId = (rs.getInt("cityId"));
-                Country country = new Country();
-                country.setCountryId(rs.getInt("countryId"));
-                country.setCountry(rs.getString("country"));
+                State state = new State();
+                state.setStateId(rs.getInt("stateId"));
+                state.setState(rs.getString("state"));
                 
                 
-                City city = new City(cityId, tempCity, country);
+                City city = new City(cityId, tempCity, state);
                 Address address = new Address(addressId, addressOne, addressTwo, city, postal, phoneNum);
                 Customer customer = new Customer(id, cName, address, active);
                 searchedCustomer.add(customer);

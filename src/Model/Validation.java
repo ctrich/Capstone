@@ -29,19 +29,27 @@ public class Validation {
          throw new InputException("The name field can only contain letters");
      }
    }
+    
+    public static void validateCity(String city) throws InputException{
+        error.clear();
+        if(!city.matches( "[a-zA-z]+([ '-][a-zA-Z]+)*" )){
+            error.add("City can only contain lettters");
+            throw new InputException("City can only contain letters");
+        }
+    }
 
      /**
      * 
      * @param name
      * @param address
      * @param address2
-     * @param country
+     * @param state
      * @param city
      * @param postal
      * @param phone
      * @throws InputException if any fields are blank
      */
-    public static void checkForEmptyFields(String name, String address, String address2, String country, String city, String postal, String phone) throws InputException{
+    public static void checkForEmptyFields(String name, String address, String address2, String state, String city, String postal, String phone) throws InputException{
         
         error.clear();
         
@@ -57,12 +65,12 @@ public class Validation {
             error.add("If you do not have an address line 2 enter N/A");
         }
         
-        if(country == null){
-            error.add("Please select a country");
+        if(state.isEmpty()){
+            error.add("Please enter a state");
         }
         
-        if(city == null){
-            error.add("Please select a city");
+        if(city.isEmpty()){
+            error.add("Please enter a city");
         }
         
         if(postal.isEmpty()){
@@ -84,7 +92,7 @@ public class Validation {
      * @throws InputException if the phone field is not numbers only
      */
 //    public void
-     public static void phoneTxtIsNumbers(String phone) throws InputException{
+    public static void phoneTxtIsNumbers(String phone) throws InputException{
         error.clear();
          if (phone.matches("[0-9]+") && phone.length() > 2){
              return;
@@ -93,12 +101,22 @@ public class Validation {
          throw new InputException("Phone field should only contain numbers");
     }
      
-     public static void validateAddress(String address)throws InputException{
-         error.clear();
-       if(!address.matches("\\d+[ ](?:[A-Za-z0-9.-]+[ ](?:[A-Za-z0-9.-])")) {
-           error.add("Invalid address");
-           throw new InputException("Invalid address");
-       }
-   } 
+    public static void validateState(String state)throws InputException {
+        error.clear();
+        
+        if (!state.matches("AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT" +
+                           "|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY")) {
+            error.add("Enter a valid two letter abbreviation for state");
+            throw new InputException("Enter a valid teo letter abbreviation for state");
+        }
+    }
+    
+    public static void validateZip(String zip)throws InputException {
+        error.clear();
+        if (!zip.matches("\\b\\d{5}(?:-\\d{4})?\\b")){
+            error.add("Enter a five digit postal code");
+            throw new InputException("Enter a five digit postal code");
+        }
+    }
     
 }

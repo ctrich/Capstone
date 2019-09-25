@@ -15,12 +15,12 @@ package Model;
 public class City {
    private int cityId;
    private String city;
-   private Country country;
+   private State state;
 
-    public City(int cityId, String city, Country country) {
+    public City(int cityId, String city, State state) {
         this.cityId = cityId;
         this.city = city;
-        this.country = country;
+        this.state = state;
     }
 
     public City() {
@@ -43,15 +43,12 @@ public class City {
         this.city = city;
     }
 
-    public Country getCountry() {
-        return country;
+    public State getState() {
+        return state;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setState(State state) {
+        this.state = state;
     }
-   
-   
-   
     
 }
