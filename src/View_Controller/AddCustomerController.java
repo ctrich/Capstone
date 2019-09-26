@@ -14,7 +14,7 @@ import Model.Address;
 import Model.City;
 import Model.State;
 import Model.Customer;
-import Model.Validation;
+import Validation.Validation;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;

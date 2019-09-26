@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
+package Validation;
 
 import DAO.AppointmentDAO;
 import Exception.InputException;
 import Exception.OverlapAppException;
+import Model.Appointment;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

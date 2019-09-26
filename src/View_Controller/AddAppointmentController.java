@@ -13,7 +13,7 @@ import Exception.InputException;
 import Exception.OverlapAppException;
 import Model.Appointment;
 import Model.Customer;
-import Model.Validation;
+import Validation.Validation;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
