@@ -35,6 +35,7 @@ public static User currentUser = new User();
    * Attempts to log in the user based on the info they entered
    */
     public static User login(String userName, String password){
+        User user = new User();
         String userQuery = "SELECT * FROM user WHERE userName = ? AND password = ?";
         
         try{
@@ -46,17 +47,17 @@ public static User currentUser = new User();
 
             while(result.next()) {
                 
-                 currentUser.setUserId(result.getInt("userId"));
-                 currentUser.setUserName(result.getString("userName"));
-                 currentUser.setPassword(result.getString("password"));
-                 currentUser.setActive(result.getInt("active"));
+                 user.setUserId(result.getInt("userId"));
+                 user.setUserName(result.getString("userName"));
+                 user.setPassword(result.getString("password"));
+                 user.setActive(result.getInt("active"));
             }
         
             }catch(SQLException e){
                 System.out.println("Error: " + e);
         }
-  
-        return currentUser;
+        currentUser = user;
+        return user;
     }
     /**
      * 
