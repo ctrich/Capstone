@@ -306,3 +306,25 @@ Login successful test 2019-09-25T17:19:24.144
 Login successful test 2019-09-26T21:39:47.303
 Login attempt failed testt 2019-09-26T22:47:28.574
 Login successful test 2019-09-26T23:25:50.291
+Login attempt failed select * from user where userName = 'test' and password ='' or '1'; 2019-09-27T09:25:51.097
+Login attempt failed select * from user where userName = 'test' and password ='' or '1' 2019-09-27T09:25:59.847
+Login attempt failed test 2019-09-27T09:26:45.468
+Login attempt failed test 2019-09-27T09:26:47.555
+Login attempt failed test 2019-09-27T09:27:07.338
+Login attempt failed test 2019-09-27T09:28:22.693
+Login attempt failed test 2019-09-27T09:30:42.348
+Login attempt failed test 2019-09-27T09:30:48.608
+Login attempt failed test 2019-09-27T09:33:21.133
+Login attempt failed test';delete from user where userId = 2;'  2019-09-27T09:37:30.681
+Login attempt failed test'; delete from user where userId = 2;'  2019-09-27T09:38:30.172
+Login attempt failed test'; delete from user where userId = 2; -- 2019-09-27T09:42:03.908
+Login attempt failed test'); delete from user where userId = 2; -- 2019-09-27T09:42:57.433
+Login successful test 2019-09-27T09:48:31.764
+Login attempt failed admin 2019-09-27T09:52:27.853
+Login successful admin 2019-09-27T09:52:33.381
+Login attempt failed  2019-09-27T09:52:42.208
+Login successful test 2019-09-27T10:38:51.723
+Login successful test 2019-09-27T11:16:45.588
+Login successful test 2019-09-27T11:32:05.926
+Login attempt failed asd 2019-09-27T12:33:37.670
+Login successful test 2019-09-28T12:39:22.381

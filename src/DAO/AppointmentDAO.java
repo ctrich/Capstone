@@ -41,7 +41,9 @@ public class AppointmentDAO {
         
         int dentistId = DentistDAO.getDentistIdByName(app.getDentistName());
         
-        String sqlInsert = "INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdateBy, dentistId)"
+        String sqlInsert = "INSERT INTO appointment(customerId, userId, title, description, "
+                         + "location, contact, type, url, start, end, createDate, createdBy, "
+                         + "lastUpdateBy, dentistId)"
                          + "VALUES(?,?,'','', '', '', ?,'', ?, ?, now(), ?, ?, ?)";
         
         try {
@@ -88,7 +90,8 @@ public class AppointmentDAO {
     public static void updateAppointment(Appointment app) {
         Timestamp start = changeTimetoUTC(app.getStart());
         Timestamp end = changeTimetoUTC(app.getEnd());
-        String sqlUpdate = "UPDATE appointment SET userId = ?, type = ?, start = ?, end = ?, lastUpdateBy = ?, dentistId = ? "
+        String sqlUpdate = "UPDATE appointment SET userId = ?, type = ?, "
+                         + "start = ?, end = ?, lastUpdateBy = ?, dentistId = ? "
                          + "WHERE appointmentId = ?";
         
         try {
@@ -97,7 +100,7 @@ public class AppointmentDAO {
             stmt.setString(2, app.getType());
             stmt.setTimestamp(3, start);
             stmt.setTimestamp(4, end);
-            stmt.setString(5, UserDAO.currentUser.getUserName());
+            stmt.setString(5, UserDAO.currentUser.getUserName());   
             stmt.setInt(6, app.getDentistId());
             stmt.setInt(7, app.getAppointmentId());
             
@@ -174,7 +177,8 @@ public class AppointmentDAO {
      * @throws SQLException 
      */
     public static ObservableList<Appointment> getAppointments() throws SQLException{
-       String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
+       String sqlQuery = "SELECT customer.customerName, customer.customerId, user.userId, user.userName, dentist.dentistId, "
+                        + "dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                         + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                         + "INNER JOIN user ON appointment.userId = user.userId "
                         + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId";
@@ -191,7 +195,8 @@ public class AppointmentDAO {
      * @throws SQLException 
      */
     public static ObservableList<Appointment> getAppointments(String dentist) throws SQLException{
-         String sqlQuery = "SELECT customer.customerName, customer.customerId,user.userId, user.userName, dentist.dentistId, dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
+         String sqlQuery = "SELECT customer.customerName, customer.customerId,user.userId, user.userName, dentist.dentistId, "
+                        + "dentist.lastName, appointmentId, appointment.type, appointment.start, appointment.end "
                         + "FROM customer INNER JOIN appointment ON customer.customerId = appointment.customerId "
                         + "INNER JOIN user ON appointment.userId = user.userId "
                         + "INNER JOIN dentist ON appointment.dentistId = dentist.dentistId "

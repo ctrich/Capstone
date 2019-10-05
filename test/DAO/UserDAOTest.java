@@ -83,4 +83,14 @@ public class UserDAOTest {
         String result = testLogin(userName, password);
         assertEquals(null, result);
     }
+    //test for blank username and password fields
+    @Test
+    public void blankUserAndPassword() throws ClassNotFoundException, SQLException {
+        System.out.println("Blank User and Password");
+        String userName = "";
+        String password = "";
+        
+        String result = testLogin(userName, password);
+        assertEquals(null, result);
+    }
 }
