@@ -14,16 +14,16 @@ mysql-connector-java-5.0.47.jar
 	Found in LoginController.Java. Second Language is French.
 
 
-### Provide the ability to view the calendar by month and by week.
+### Provides the ability to view the calendar by month and by week.
 	Found in AppointmentMonthController and AppointmentWeekController.
  ![Reports App by month](https://user-images.githubusercontent.com/41929486/181087464-49aca55c-64c5-4fc5-86a0-352fa3ababdb.png)
 
 
-### Provide the ability to automatically adjust appointment times based on user time zones and daylight saving time.
+### Provides the ability to automatically adjust appointment times based on user time zones and daylight saving time.
 	Times are converted in AppointmentDAO.java
  
 
-### Write exception controls to prevent each of the following. You may use the same mechanism of exception control more than once, but you must incorporate at least  two different mechanisms of exception control.
+### Contains exception controls to prevent each of the following.
 
 •   scheduling an appointment outside business hours
 	Appointment times are selected using a combobox making it impossible to select times ouside of business hours
@@ -47,10 +47,10 @@ mysql-connector-java-5.0.47.jar
  	UpdateCustomerController.java line 174
 	LoginController.java line 120
 
-### Write code to provide an alert if there is an appointment within 15 minutes of the user’s log-in.
+### Alerts user if there is an appointment within 15 minutes of the user’s log-in.
 	found in LoginController.java line 125
 
-### Provide the ability to generate each  of the following reports:
+### Provides the ability to generate each  of the following reports:
 
 •   number of appointment types by month
 	Found in ReportsController.java
@@ -62,7 +62,7 @@ mysql-connector-java-5.0.47.jar
 	Found in ReportsController.java
 
 
-### Provide the ability to track user activity by recording timestamps for user log-ins in a .txt file. Each new record should be appended to the log file, if the file already exists.
+### Provides the ability to track user activity by recording timestamps for user log-ins in a .txt file. Each new record should be appended to the log file, if the file already exists.
 	Found in LoginController.java line 107 and line 134
 
 #### More screenshots
