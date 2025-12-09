@@ -25,19 +25,19 @@ mysql-connector-java-5.0.47.jar
 
 ### Contains exception controls to prevent each of the following.
 
-•   scheduling an appointment outside business hours
+•   Scheduling an appointment outside business hours
 	Appointment times are selected using a combobox making it impossible to select times ouside of business hours
 
-•   scheduling overlapping appointments
+•   Scheduling overlapping appointments
 	This was handled using a both throw and a try catch.
 	The try catch is in AddAppointmentController.java line 158 and throw is line 260
 	
 ![validation 3 Overlap](https://user-images.githubusercontent.com/41929486/181089375-8146f0f0-8f1b-43a6-806a-12aa8ce8fe33.png)
 
 
-•   entering nonexistent or invalid customer data
+•   Entering nonexistent or invalid customer data
 	This was accomplished by using both throw ans try catch.
-	the try catch is in AddAppointmentController.java line 121 and throw is line 211.
+	The try catch is in AddAppointmentController.java line 121 and throw is line 211.
 ![validation 1 empty](https://user-images.githubusercontent.com/41929486/181089189-96aed86e-51ac-4f44-9f01-6cadd09e9242.png)
 
 	
@@ -48,17 +48,17 @@ mysql-connector-java-5.0.47.jar
 	LoginController.java line 120
 
 ### Alerts user if there is an appointment within 15 minutes of the user’s log-in.
-	found in LoginController.java line 125
+	Found in LoginController.java line 125
 
 ### Provides the ability to generate each  of the following reports:
 
-•   number of appointment types by month
+•   Number of appointment types by month
 	Found in ReportsController.java
 
-•   the schedule for each consultant
+•   The schedule for each consultant
 	Found in ReportsController.java
 
-•   one additional report of your choice
+•   One additional report of your choice
 	Found in ReportsController.java
 
 
